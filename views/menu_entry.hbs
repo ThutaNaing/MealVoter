@@ -1,0 +1,63 @@
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+			<ul class="nav nav-tabs">
+				<li role="presentation"><a href="/mealvoter/poll/board">Poll Board</a></li>
+				<li role="presentation"><a href="/mealvoter/poll/result">Vote Result</a></li>
+				<li role="presentation"><a href="/mealvoter/setup/restaurant">Restaurant Entry</a></li>
+				<li role="presentation" class="active"><a href="/mealvoter/setup/menu">Menu Entry</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="row">
+		<form id="menuFormId">
+			<div class="col-md-2 col-sm-3 form-group">
+				<label for="menuNameId">Menu Name</label>
+			</div>
+			<div class="col-md-2 col-sm-3 form-group">
+				<input type="text" class="form-control" id="menuNameId" name="menuName" placeholder="Menu">
+			</div>
+			<div class="col-md-2 col-sm-3 form-group">
+				<label for="codeNoId">Code No</label>
+			</div>
+			<div class="col-md-2 col-sm-3 form-group">
+				<input type="text" class="form-control" id="codeNoId" name="code" placeholder="Code">
+			</div>
+			<div class="col-md-2 col-sm-3 form-group">
+				<label for="priceId">Price</label>
+			</div>
+			<div class="col-md-2 col-sm-3 form-group">
+				<input type="text" class="form-control" id="priceId" name="price" placeholder="Price">
+			</div>
+			<div class="col-md-2 col-sm-3 form-group">
+				<label for="descriptionId">Additional Note</label>
+			</div>
+			<div class="col-md-2 col-sm-3 form-group">
+				<textarea class="form-control" id="descriptionId" name="description" rows="3"></textarea>
+			</div>
+
+			<div class="form-group">
+    			<div class="col-md-offset-2 col-sm-offset-3 col-md-12 col-sm-12">
+      				<button type="submit" id="addMenuBtnId" class="btn btn-default">Add Menu</button>
+    			</div>
+  			</div>
+
+		</form>
+	</div>
+	<div class="row">
+		
+	</div>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#addMenuBtnId').click(function(event) {
+			event.preventDefault();
+			var serializedFormData = $('form#menuFormId').serialize();
+			$.post( "/mealvoter/setup/menu", serializedFormData ).done(function(data) {
+				//$('form#menuFormId').clear();
+				console.log(data);
+			});
+		});
+	});
+</script>

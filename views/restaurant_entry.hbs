@@ -1,0 +1,92 @@
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+			<ul class="nav nav-tabs">
+				<li role="presentation"><a href="/mealvoter/poll/board">Poll Board</a></li>
+				<li role="presentation"><a href="/mealvoter/poll/result">Vote Result</a></li>
+				<li role="presentation" class="active"><a href="/mealvoter/setup/restaurant">Restaurant Entry</a></li>
+				<li role="presentation"><a href="/mealvoter/setup/menu">Menu Entry</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="row">
+		<form id="restaurantFormId">
+			<div class="col-md-2 col-sm-3 form-group">
+				<label for="restaurantNameId">Restaurant Name</label>
+			</div>
+			<div class="col-md-2 col-sm-3 form-group">
+				<input type="text" class="form-control" id="restaurantNameId" name="restaurantName" placeholder="Restaurant Name">
+			</div>
+			<div class="col-md-2 col-sm-3 form-group">
+				<label for="phNoId">Phone No</label>
+			</div>
+			<div class="col-md-2 col-sm-3 form-group">
+				<input type="text" class="form-control" id="phNoId" name="phNo" placeholder="Ph No">
+			</div>
+			<div class="col-md-2 col-sm-3 form-group">
+				<label for="placeId">Place</label>
+			</div>
+			<div class="col-md-2 col-sm-3 form-group">
+				<textarea class="form-control" id="placeId" name="place" rows="3"></textarea>
+			</div>
+
+			<div class="form-group">
+    			<div class="col-md-offset-2 col-sm-offset-3 col-md-12 col-sm-12">
+      				<button type="submit" id="addMenuBtnId" class="btn btn-default">Add Restaurant</button>
+    			</div>
+  			</div>
+
+		</form>
+	</div>
+	<div class="row">
+		<table id="menutblListId" class="table table-bordered">
+			<thead>
+				<tr>
+					<th></th>
+					<th>Menu Name</th>
+					<th>Code</th>
+					<th>Price</th>
+					<th>Description</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody></tbody>
+		</table>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+
+		$('#addMenuBtnId').click(function(event) {
+			event.preventDefault();
+			var serializedFormData = $('form#restaurantFormId').serialize();
+			$.post( "/mealvoter/setup/restaurant", serializedFormData ).done(function(restaurant) {
+
+				console.log(restaurant);
+				$.post("/mealvoter/setup/menuList").done(function(menuArray) {
+					console.log(menuArray);
+					$('table#menutblListId > tbody tr').remove();
+
+					$.map(menuArray, function( value, key ) {
+						var requestItemRow = 	"<tr>" + 
+												"<td><span class='itemLabel'></span></td>" +
+												"<td>" + value.menuName + "</td>" +
+												"<td>" + value.code + "</td>" +
+												"<td>" + value.price + "</td>" +
+												"<td>" + value.description + "</td>" +
+												"<td><button id='" + value.menuId + "' class='btn btn-default menuClass'>Add Menu</button></td>"
+												"</tr>";
+						$('table#menutblListId > tbody').append(requestItemRow);
+					});
+					$('.menuClass').click(function(event) {
+						var menuId = event.delegateTarget.id;
+						console.log(menuId);
+						$.post("/mealvoter/setup/restaurant/"+menuId, restaurant).done(function(){});
+					});
+				});
+
+			});
+		});
+	});
+</script>

@@ -1,0 +1,44 @@
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+			<ul class="nav nav-tabs">
+				<li role="presentation" class="active"><a href="/mealvoter/poll/board">Poll Board</a></li>
+				<li role="presentation"><a href="/mealvoter/poll/result">Vote Result</a></li>
+				{{#if user}}
+				<li role="presentation"><a href="/mealvoter/setup/restaurant">Restaurant Entry</a></li>
+				<li role="presentation"><a href="/mealvoter/setup/menu">Menu Entry</a></li>
+				{{/if}}
+			</ul>
+		</div>
+	</div>
+	<div id="pollBoardDivId" class="row">
+	</div>
+</div>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$.post( "/mealvoter/poll/result" ).then(function(voteCountArray) {
+
+			console.log(voteCountArray);
+			$.map(voteCountArray, function( value, key ) {
+				var containerDom = 
+				"<div class='col-md-2 col-sm-3 well'>" +
+					"<h4>"+ value.restaurantName +" <span class='badge'>"+ value.voteCount +"</span></h4>" +
+				"</div>";
+				$('div#pollBoardDivId').append(containerDom);
+			});
+
+		});
+
+		$.post("/mealvoter/poll/winner").then(function(winner) {
+			$('div#pollBoardDivId > div').remove();
+			console.log(winner);
+			$.map(winner, function( value, key ) {
+				var containerDom = 
+				"<div class='col-md-2 col-sm-3 well'>" +
+					"<h4>"+ value.restaurantName +" <span class='label label-danger'>winner"+ value.voteCount +"</span></h4>" +
+				"</div>";
+				$('div#pollBoardDivId').append(containerDom);
+			});
+		})
+	});
+</script>
